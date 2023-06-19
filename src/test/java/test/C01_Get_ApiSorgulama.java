@@ -27,6 +27,7 @@ public class C01_Get_ApiSorgulama {
         // 3 - Bize donen Response'i Actual Data olarak kaydet
         Response response=given().when().get(url);
         // response.prettyPrint();
+
         System.out.println(response.getStatusCode()+" statüs kodu");
         System.out.println(response.getContentType()+" content type");
         System.out.println(response.getHeader("Server")+" server header");

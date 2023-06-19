@@ -26,30 +26,24 @@ public class C04_Put_ResponseBilgileriAssertion {
       */
     @Test
     public void put01() {
-    // 1 End Point vwe request body hazırla
-        String url=" https://jsonplaceholder.typicode.com/posts/70";
+        // 1 End Point vwe request body hazırla
+        String url = " https://jsonplaceholder.typicode.com/posts/70";
 
-        JSONObject requestBody=new JSONObject();
-        requestBody.put("title","Ahmet");
-        requestBody.put("body","Merhaba");
-        requestBody.put("userId",10);
-        requestBody.put("id",70);
-        Response response= given().contentType(ContentType.JSON)
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("title", "Ahmet");
+        requestBody.put("body", "Merhaba");
+        requestBody.put("userId", 10);
+        requestBody.put("id", 70);
+        Response response = given().contentType(ContentType.JSON)
                 .when().body(requestBody.toString()).put(url);
 
         //Assertions
         response.then().assertThat().statusCode(200)
                 .contentType("application/json")
-                .header("Server","cloudflare")
+                .header("Server", "cloudflare")
                 .statusLine("HTTP/1.1 200 OK");
 
 
     }
 
-    git init
-    git add .
-    git commit -m "first commit"
-    git branch -M main
-    git remote add origin https://github.com/sevgisever67/API-TESTI.git
-    git push -u origin main
 }
