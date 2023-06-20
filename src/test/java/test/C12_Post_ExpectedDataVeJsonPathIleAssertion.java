@@ -8,27 +8,30 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class C12_Post_ExpectedDataVeJsonPathIleAssertion {
+
     /*
     https://restful-booker.herokuapp.com/booking url’ine
     asagidaki body'ye sahip bir POST request gonderdigimizde
     donen response’un id disinda asagidaki gibi oldugunu test edin.
-                        Request body
-                   {
-                        "firstname" : "Ahmet",
-                        "lastname" : “Bulut",
-                        "totalprice" : 500,
-                        "depositpaid" : false,
-                        "bookingdates" : {
-                                 "checkin" : "2021-06-01",
-                                 "checkout" : "2021-06-10"
-                                          },
-                        "additionalneeds" : "wi-fi"
-                    }
-                        Response Body - Expected Body
-                   {
+    	                Request body
+    	           {
+    	                "firstname" : "Ahmet",
+    	                "lastname" : “Bulut",
+    	                "totalprice" : 500,
+    	                "depositpaid" : false,
+    	                "bookingdates" : {
+    	                         "checkin" : "2021-06-01",
+    	                         "checkout" : "2021-06-10"
+    	                                  },
+    	                "additionalneeds" : "wi-fi"
+    	            }
+
+
+    	            	Response Body - Expected Body
+    	           {
                     "bookingid":24,
                     "booking":{
                         "firstname":"Ahmet",
@@ -46,58 +49,92 @@ public class C12_Post_ExpectedDataVeJsonPathIleAssertion {
 */
 
     @Test
-    public void get() {
+    public void post01(){
 
+        // 1 - Url ve Request Body hazirla
 
-     // 1 url ve request body hazırla
-        String url="https://restful-booker.herokuapp.com/booking";
+        String url = "https://restful-booker.herokuapp.com/booking";
 
-        JSONObject bookingdate=new JSONObject();
-        bookingdate.put( "checkin" , "2021-06-01");
-        bookingdate.put(   "checkout" , "2021-06-10");
+        /*
+                   {
+    	                "firstname" : "Ahmet",
+    	                "lastname" : “Bulut",
+    	                "totalprice" : 500,
+    	                "depositpaid" : false,
+    	                "bookingdates" : {
+    	                         "checkin" : "2021-06-01",
+    	                         "checkout" : "2021-06-10"
+    	                                  },
+    	                "additionalneeds" : "wi-fi"
+    	            }
+         */
 
-        JSONObject requestBody=new JSONObject() ;
-        requestBody.put("firstname" , "Ahmet");
-        requestBody.put("lastname" , "Bulut");
-        requestBody.put( "totalprice" , 500);
-        requestBody.put("depositpaid" , false);
-        requestBody.put("bookingdates",bookingdate);
-        requestBody.put("additionalneeds","wi-fi");
+        JSONObject bookingdates = new JSONObject();
 
+        bookingdates.put("checkin" , "2021-06-01");
+        bookingdates.put("checkout" , "2021-06-10");
 
-        // 2 Expected Datayı hazırla
+        JSONObject reqBody = new JSONObject();
 
-        JSONObject expectedData=new JSONObject();
-        JSONObject exBookingdate=new JSONObject();
-        exBookingdate.put( "checkin" , "2021-06-01");
-        exBookingdate.put(   "checkout" , "2021-06-10");
+        reqBody.put("firstname" , "Ahmet");
+        reqBody.put("lastname" , "Bulut");
+        reqBody.put("totalprice" , 500);
+        reqBody.put("depositpaid" , false);
+        reqBody.put("additionalneeds" , "wi-fi");
+        reqBody.put("bookingdates" , bookingdates);
 
+        // 2 - Expected Data hazirla
 
-        expectedData.put( "bookingid",24);
-        expectedData.put("firstname" , "Ahmet");
-        expectedData.put("lastname" , "Bulut");
-        expectedData.put( "totalprice" , 500);
-        expectedData.put("depositpaid" , false);
-        expectedData.put("bookingdates",exBookingdate);
-        expectedData.put("additionalneeds","wi-fi");
+        /*
+                   {
+                    "bookingid":24,
+                    "booking":{
+                        "firstname":"Ahmet",
+                        "lastname":"Bulut",
+                        "totalprice":500,
+                        "depositpaid":false,
+                        "bookingdates":{
+                            "checkin":"2021-06-01",
+                            "checkout":"2021-06-10"
+                                        }
+                        ,
+                        "additionalneeds":"wi-fi"
+                               }
+                    }
+         */
 
+        JSONObject expData = new JSONObject();
 
-        // 3 sorguyu yap ve kaydet
+        expData.put("bookingid",24);
+        expData.put("booking", reqBody);
+
+        // 3 - Response kaydet
+
         Response response = given()
                 .contentType(ContentType.JSON)
                 .when()
-                .body(requestBody.toString())
+                .body(reqBody.toString())
                 .post(url);
 
         response.prettyPrint();
 
+        // 4 - Assertion
 
-        JsonPath resJP=response.jsonPath();
-        assertEquals(expectedData.getJSONObject("booking").get("firstname"),resJP.get("booking.firstname"));
+        JsonPath respJP = response.jsonPath();
 
-        // 3 Assertion yap
-
-
+        assertEquals(expData.getJSONObject("booking").get("firstname"), respJP.get("booking.firstname") );
+        assertEquals(expData.getJSONObject("booking").get("lastname"), respJP.get("booking.lastname") );
+        assertEquals(expData.getJSONObject("booking").get("totalprice"), respJP.get("booking.totalprice"));
+        assertEquals(expData.getJSONObject("booking").get("depositpaid"), respJP.get("booking.depositpaid"));
+        assertEquals(expData.getJSONObject("booking").get("additionalneeds"), respJP.get("booking.additionalneeds"));
+        assertEquals(expData.getJSONObject("booking").getJSONObject("bookingdates").get("checkin") ,
+                respJP.get("booking.bookingdates.checkin") );
+        assertEquals(expData.getJSONObject("booking").getJSONObject("bookingdates").get("checkout") ,
+                respJP.get("booking.bookingdates.checkout") );
 
     }
+
+
+
+
 }
