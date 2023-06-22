@@ -1,16 +1,14 @@
 package test;
-
-
-
 import baseUrl.HerokuAppBaseUrl;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.json.JSONObject;
-import org.testng.annotations.Test;
-import testData.TestDataHerokup;
+import org.junit.Test;
+import testData.TestDataHerokuapp;
+
 import static io.restassured.RestAssured.given;
-import static org.testng.AssertJUnit.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class C21_Post_TestDataKullanimi extends HerokuAppBaseUrl {
 
@@ -18,20 +16,22 @@ public class C21_Post_TestDataKullanimi extends HerokuAppBaseUrl {
     https://restful-booker.herokuapp.com/booking url’ine asagidaki body'ye sahip
     bir POST request gonderdigimizde donen response’un status kodunu ve id haric
     body'sinin asagidaki gibi oldugunu test edin.
-    Request body
-          {
-          "firstname" : "Ali",
-          "lastname" : “Bak",
-          "totalprice" : 500,
-          "depositpaid" : false,
-          "bookingdates" : {
+
+	Request body
+	      {
+	      "firstname" : "Ali",
+	      "lastname" : “Bak",
+	      "totalprice" : 500,
+	      "depositpaid" : false,
+	      "bookingdates" : {
                       "checkin" : "2021-06-01",
                       "checkout" : "2021-06-10"
                         },
-          "additionalneeds" : "wi-fi"
-           }
-    Expected Body
-    {
+	      "additionalneeds" : "wi-fi"
+	       }
+
+	Expected Body
+	{
     "bookingid":24,
     "booking":{
             "firstname":"Ali",
@@ -49,33 +49,47 @@ public class C21_Post_TestDataKullanimi extends HerokuAppBaseUrl {
 
     @Test
     public void post01(){
-        // 1 url
+
+        // 1 - Url ve Request Body hazirla
+
         specHerokuApp.pathParam("pp1","booking");
-        TestDataHerokup testDataHerokup=new TestDataHerokup();
-        JSONObject requestBody=testDataHerokup.bookingOlusturJson();
 
-        // 2
-        JSONObject expData=testDataHerokup.expectedDataOlusturJson();
+        TestDataHerokuapp testDataHerokuapp = new TestDataHerokuapp();
 
-        // 3
-        Response response=given()
+        JSONObject reqBody = testDataHerokuapp.bookingOlusturJSON();
+
+        // 2 - Expected Data hazirla
+
+        JSONObject expData = testDataHerokuapp.expectedBodyOlusturJSON();
+
+        // 3 - Response'i kaydet
+
+        Response response = given()
                 .spec(specHerokuApp)
                 .contentType(ContentType.JSON)
                 .when()
-                .body(requestBody.toString())
+                .body(reqBody.toString())
                 .post("/{pp1}");
 
-        // 4
-        JsonPath respJP=response.jsonPath();
+        response.prettyPrint();
 
+        // 4 - Assertion
 
-        assertEquals(testDataHerokup.basarilistatusKod, response.getStatusCode());
+        JsonPath respJP = response.jsonPath();
+
+        assertEquals(testDataHerokuapp.basariliStatusCode, response.getStatusCode());
+
         assertEquals(expData.getJSONObject("booking").get("firstname"), respJP.get("booking.firstname"));
         assertEquals(expData.getJSONObject("booking").get("lastname"), respJP.get("booking.lastname"));
         assertEquals(expData.getJSONObject("booking").get("totalprice"), respJP.get("booking.totalprice"));
         assertEquals(expData.getJSONObject("booking").get("depositpaid"), respJP.get("booking.depositpaid"));
         assertEquals(expData.getJSONObject("booking").get("additionalneeds"), respJP.get("booking.additionalneeds"));
+        assertEquals(expData.getJSONObject("booking").getJSONObject("bookingdates").get("checkin"),
+                respJP.get("booking.bookingdates.checkin"));
+        assertEquals(expData.getJSONObject("booking").getJSONObject("bookingdates").get("checkout"),
+                respJP.get("booking.bookingdates.checkout"));
 
     }
+
 
 }

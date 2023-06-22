@@ -2,12 +2,14 @@ package test;
 
 import baseUrl.JsonPlaceHolderBaseURL;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.json.JSONObject;
 import org.junit.Test;
 import testData.TestDataJsonPlace;
 
 import static io.restassured.RestAssured.given;
+import static junit.framework.TestCase.assertEquals;
 
 public class C19_Put_TestDataClassKullanimi extends JsonPlaceHolderBaseURL {
 
@@ -33,28 +35,30 @@ public class C19_Put_TestDataClassKullanimi extends JsonPlaceHolderBaseURL {
         }
   */
     @Test
-    public void put01(){
+    public void put01() {
         // 1- Url ve request body hazırla
-        specJsonPlace.pathParams("pp1","posts","pp2",70);
-        TestDataJsonPlace testDataJsonPlace=new TestDataJsonPlace();
-        JSONObject requestBody=testDataJsonPlace.requestBodyOlusturJson();
+        specJsonPlace.pathParams("pp1", "posts", "pp2", 70);
+        TestDataJsonPlace testDataJsonPlace = new TestDataJsonPlace();
+        JSONObject requestBody = testDataJsonPlace.requestBodyOlusturJSON();
 
         // 2
-        JSONObject expData=testDataJsonPlace.requestBodyOlusturJson();
+        JSONObject expData = testDataJsonPlace.requestBodyOlusturJSON();
 
         // 3
-        Response response=given().spec(specJsonPlace)
+        Response response = given().spec(specJsonPlace)
                 .contentType(ContentType.JSON)
                 .when()
                 .body(requestBody.toString())
                 .put("/{pp1}/{pp2}");
 
+        JsonPath respJP = response.jsonPath();
 
-
+        assertEquals(expData.get("userId"), respJP.get("userId"));
+        assertEquals(expData.get("id"), respJP.get("id"));
+        assertEquals(expData.get("title"), respJP.get("title"));
+        assertEquals(expData.get("body"), respJP.get("body"));
 
     }
-
-
 
 
 }

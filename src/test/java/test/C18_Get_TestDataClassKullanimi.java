@@ -9,6 +9,7 @@ import org.junit.Test;
 import testData.TestDataJsonPlace;
 
 import static io.restassured.RestAssured.given;
+import static junit.framework.TestCase.assertEquals;
 
 public class C18_Get_TestDataClassKullanimi extends JsonPlaceHolderBaseURL {
     /*
@@ -31,15 +32,19 @@ public class C18_Get_TestDataClassKullanimi extends JsonPlaceHolderBaseURL {
 
         // 2 Expected data hazırla
         TestDataJsonPlace testDataJsonPlace=new TestDataJsonPlace();
-        JSONObject expectedData=testDataJsonPlace.expectedDataOlusturJson();
+        JSONObject expData=testDataJsonPlace.expectedBodyOlusturJSON();
 
         // 3
         Response response=given().spec(specJsonPlace).when().get("/{pp1}/{pp2}");
 
         // 4 Assertion
-        JsonPath jsonPath=response.jsonPath();
-        //Assert.assertEquals(testDataJsonPlace.basarilistatusKod,);
-        Assert.assertEquals(expectedData.get("userId"),jsonPath.get("userId"));
+        JsonPath respJP = response.jsonPath();
+
+        assertEquals(testDataJsonPlace.basariliStatusCode,response.getStatusCode());
+        assertEquals(expData.get("userId"), respJP.get("userId"));
+        assertEquals(expData.get("id"), respJP.get("id"));
+        assertEquals(expData.get("title"), respJP.get("title"));
+        assertEquals(expData.get("body"), respJP.get("body"));
 
 
 
