@@ -118,10 +118,10 @@ public class C12_Post_ExpectedDataVeJsonPathIleAssertion {
 
         response.prettyPrint();
 
+
         // 4 - Assertion
 
         JsonPath respJP = response.jsonPath();
-
         assertEquals(expData.getJSONObject("booking").get("firstname"), respJP.get("booking.firstname") );
         assertEquals(expData.getJSONObject("booking").get("lastname"), respJP.get("booking.lastname") );
         assertEquals(expData.getJSONObject("booking").get("totalprice"), respJP.get("booking.totalprice"));

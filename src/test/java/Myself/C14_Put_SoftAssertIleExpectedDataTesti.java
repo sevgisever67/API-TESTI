@@ -5,66 +5,116 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.junit.Test;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 import static io.restassured.RestAssured.given;
 
 public class C14_Put_SoftAssertIleExpectedDataTesti {
 
-    /*
-    https://dummy.restapiexample.com/api/v1/update/21 url’ine asagidaki body’ye sahip bir PUT
-       request gonderdigimizde donen response’un asagidaki gibi oldugunu test edin.
-       Request Body
-       {
-       "status": "success",
-       "data": {
-       "name": “Ahmet",
-       "salary": "1230",
-       "age": "44",
-       "id": 40
-       }
-       }
-       Response Body
-       { "status": "success",
-       "data": {
-       "name": “Ahmet",
-       "salary": "1230",
-       "age": "44",
-       "id": 40 }
-       },
-"message": "Successfully! Record ha
-s been updated."
-     */
+  /*
+    https://dummy.restapiexample.com/api/v1/update/21 url’ine asagidaki
+    body’ye sahip bir PUT request gonderdigimizde donen response’un asagidaki gibi oldugunu test edin.
+
+            Request Body
+            {
+                "status":"success",
+                "data":{
+                        "name":"Ahmet",
+                        "salary":"1230",
+                        "age":"44",
+                        "id":40
+                        }
+            }
+
+            Response Body
+
+            {
+            "status":"success",
+            "data":{
+                "status":"success",
+                "data":{
+                        "name":"Ahmet",
+                        "salary":"1230",
+                        "age":"44",
+                        "id":40
+                        }
+                   },
+            "message":"Successfully! Record has been updated."
+            }
+                 */
 
     @Test
-    public void put01() {
-        String url="http://dummy.restapiexample.com/api/v1/update/21";
+    public void put01(){
+
+        // 1 - Url ve Request Body hazirla
+
+        String url = "https://dummy.restapiexample.com/api/v1/update/21";
+
+        /*
+
+         */
+
+        JSONObject data = new JSONObject();
+        data.put("name","Ahmet");
+        data.put("salary","1230");
+        data.put("age","44");
+        data.put("id",40);
 
         JSONObject requestBody=new JSONObject();
-        requestBody.put("status", "success");
-        requestBody.put("name", "Ahmet");
-        requestBody.put("salary", "1230");
-        requestBody.put("age", "44");
-        requestBody.put("id", 40);
+        requestBody.put("status","success");
+        requestBody.put("data",data);
 
-        // Response Body
+        // 2 Expected datayı hazırla
+        /*
+         {
+            "status":"success",
+            "data":{
+                "status":"success",
+                "data":{
+                        "name":"Ahmet",
+                        "salary":"1230",
+                        "age":"44",
+                        "id":40
+                        }
+                   },
+            "message":"Successfully! Record has been updated."
+            }
+         */
+
+
         JSONObject expectedData=new JSONObject();
-        expectedData.put("status", "success");
-        expectedData.put("name", "Ahmet");
-        expectedData.put("salary", "1230");
-        expectedData.put("age", "44");
-        expectedData.put("id", 40);
+        expectedData.put("status","success");
+        expectedData.put("data",requestBody);
+        expectedData.put("message","Successfully! Record has been updated.");
 
-        // put
-        Response actualData=given()
-                .contentType(ContentType.JSON).when()
-                .body(requestBody.toString()).put(url);
+        // 3 Response i kaydet
 
-        //
-        actualData.prettyPrint();
+        Response response=given()
+                .contentType(ContentType.JSON)
+                .when().body(requestBody.toString())
+                .put(url);
 
-    //    JsonPath jsonPath=actualData.jsonPath();
-     //   Assert.assertEquals(expectedData.get("status"),jsonPath.get("data.status")
+        response.prettyPrint();
+
+        // 4 Assertions
+
+
+        JsonPath jsonPath=response.jsonPath();
+
+        SoftAssert softAssert = new SoftAssert();
+
+        softAssert.assertEquals(jsonPath.get("status"),expectedData.get("status"));
+        softAssert.assertEquals(jsonPath.get("data.data.name"),
+                expectedData.getJSONObject("data")
+                            .getJSONObject("data").get("name"));
+
+
+        softAssert.assertEquals(jsonPath.get("message"),expectedData.get("message"));
+        softAssert.assertAll();
+
+
+
 
     }
 }
