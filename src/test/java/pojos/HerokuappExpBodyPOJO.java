@@ -4,11 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-public class HeokuapExpectedBodyPojo {
-
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+
     public class HerokuappExpBodyPOJO {
     /*
     {
@@ -31,5 +30,5 @@ public class HeokuapExpectedBodyPojo {
         private int bookingid;
         private BookingPOJO booking;
 
+
     }
-}

@@ -63,13 +63,14 @@ Request body
                 .contentType(ContentType.JSON)
                 .when()
                 .body(requestBodyPojo)
-                .post("{pp1}");
+                .post("/{pp1}");
 
+        response.prettyPrint();
         // 2 - Expected body;
 
 
 
-        response.prettyPrint();
+
 
 
     }

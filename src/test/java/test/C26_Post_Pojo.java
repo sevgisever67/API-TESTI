@@ -1,18 +1,19 @@
 package test;
 
 
+import baseUrl.HerokuAppBaseUrl;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.junit.Assert;
 import org.junit.Test;
 import pojos.BookingPOJO;
 import pojos.BookingdatesPOJO;
-import pojos.HeokuapExpectedBodyPojo;
+
+import pojos.HerokuappExpBodyPOJO;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
-public class C26_Post_Pojo extends HeokuapExpectedBodyPojo {
+public class C26_Post_Pojo extends HerokuAppBaseUrl {
     /*
     https://restful-booker.herokuapp.com/booking url’ine
     asagidaki body'ye sahip bir POST request gonderdigimizde
@@ -49,17 +50,17 @@ public class C26_Post_Pojo extends HeokuapExpectedBodyPojo {
                     }
          */
 
-/*
+
     @Test
-    public void post01(){
+    public void post01() {
 
-        specHerokuApp.pathParam("pp1","booking");
+        specHerokuApp.pathParam("pp1", "booking");
 
-        BookingdatesPOJO bookingdates = new BookingdatesPOJO("2021-06-01","2021-06-10");
+        BookingdatesPOJO bookingdates = new BookingdatesPOJO("2021-06-01", "2021-06-10");
 
-        BookingPOJO reqBody = new BookingPOJO("Ali","Bak",500,false,bookingdates,"wi-fi");
+        BookingPOJO reqBody = new BookingPOJO("Ali", "Bak", 500, false, bookingdates, "wi-fi");
 
-        HerokuappExpBodyPOJO expData = new HerokuappExpBodyPOJO(24,reqBody);
+        HerokuappExpBodyPOJO expBody=new HerokuappExpBodyPOJO(24,reqBody);
 
         Response response = given()
                 .spec(specHerokuApp)
@@ -68,21 +69,14 @@ public class C26_Post_Pojo extends HeokuapExpectedBodyPojo {
                 .body(reqBody)
                 .post("/{pp1}");
 
-        response.prettyPrint();
+            response.prettyPrint();
 
-        HerokuappExpBodyPOJO respPojo = response.as(HerokuappExpBodyPOJO.class);
 
-        assertEquals(expData.getBooking().getFirstname(), respPojo.getBooking().getFirstname() );
-        assertEquals(expData.getBooking().getLastname() , respPojo.getBooking().getLastname());
-        assertEquals(expData.getBooking().getBookingdates().getCheckin(),
-                respPojo.getBooking().getBookingdates().getCheckin());
-        assertEquals(expData.getBooking().isDepositpaid() , respPojo.getBooking().isDepositpaid());
+            HerokuappExpBodyPOJO resPojo=response.as(HerokuappExpBodyPOJO.class);
+            assertEquals(expBody.getBooking().getTotalprice(),resPojo.getBooking().getTotalprice());
+            assertEquals(expBody.getBooking().getBookingdates().getCheckin(),resPojo.getBooking().getBookingdates().getCheckin());
 
 
 
-
-
-
-
-    }*/
+    }
 }
