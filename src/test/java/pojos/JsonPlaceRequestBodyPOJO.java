@@ -1,7 +1,5 @@
 package pojos;
-
 public class JsonPlaceRequestBodyPOJO {
-
     /*
      {
     "title":"Ahmet",
@@ -53,7 +51,6 @@ public class JsonPlaceRequestBodyPOJO {
     }
 
     // 3 - Tum parametreleri iceren Constructor olustur
-
     public JsonPlaceRequestBodyPOJO(String title, String body, int userId, int id) {
         this.title = title;
         this.body = body;

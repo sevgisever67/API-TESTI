@@ -1,7 +1,6 @@
 package pojos;
 
 public class HerokuApRequestBodyPojo {
-
   /*  Request body
 {
         "firstname" : "Ahmet",
@@ -23,8 +22,6 @@ public class HerokuApRequestBodyPojo {
     private boolean depositpaid;
     private BookingdatesPOJO bookingdates;
     private String additionalneeds;
-
-
     // 2 - Getter - Setter lari hazirla
 
     public int getTotalprice() {
@@ -87,14 +84,10 @@ public class HerokuApRequestBodyPojo {
         this.bookingdates = bookingdates;
         this.additionalneeds = additionalneeds;
     }
-
-
     // 4 - Parametresiz Constructor olustur
 
 
     // 5 - toString() methodu olustur
-
-
     @Override
     public String toString() {
         return "HerokuApRequestBodyPojo{" +

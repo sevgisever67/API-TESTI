@@ -1,12 +1,8 @@
 package testData;
-
 import java.util.HashMap;
-
 public class TestDataDummy {
-
     public int basariliStatusCode = 200;
     public String contentType = "application/json";
-
     /*
     {
     "status":"success",
@@ -43,5 +39,4 @@ public class TestDataDummy {
 
         return expBody;
     }
-
 }

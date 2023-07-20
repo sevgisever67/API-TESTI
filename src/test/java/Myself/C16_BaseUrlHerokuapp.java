@@ -5,7 +5,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
 
@@ -43,7 +43,11 @@ public class C16_BaseUrlHerokuapp extends HerokuAppBaseUrl {
 
         //3- Response'i kaydet
 
-        Response response=given().spec(specHerokuApp).when().get("/{pp1}");
+        Response response=given()
+                .contentType(ContentType.JSON)
+                .spec(specHerokuApp)
+                .when()
+                .get("https://restful-booker.herokuapp.com/booking");
 
         response.prettyPrint();
 
@@ -53,7 +57,7 @@ public class C16_BaseUrlHerokuapp extends HerokuAppBaseUrl {
                 .then()
                 .assertThat()
                 .statusCode(200)
-                .body("booking", Matchers.greaterThan(12));
+                .body("bookingid", Matchers.hasItem(3));
 
     }
 
@@ -99,10 +103,9 @@ public class C16_BaseUrlHerokuapp extends HerokuAppBaseUrl {
 
         //3- Response'i kaydet
 
-        Response response=given().spec(specHerokuApp).when().body(reqBody.toString()).post("/{pp1}");
-       //Response response=given().contentType(ContentType.JSON).when().body(reqBody.toString()).post("https://restful-booker.herokuapp.com/booking");
-
-        response.prettyPrint();
+       Response response=given().contentType(ContentType.JSON).spec(specHerokuApp).when().body(reqBody.toString()).post("/{pp1}");
+      // Response response=given().contentType(ContentType.JSON).when().body(reqBody.toString()).post("https://restful-booker.herokuapp.com/booking");
+       response.prettyPrint();
 
 
         //4- Assertion
@@ -110,7 +113,7 @@ public class C16_BaseUrlHerokuapp extends HerokuAppBaseUrl {
        response
                .then()
                .assertThat()
-               .body("firstname",Matchers.equalTo("Ahmet"));
+               .body("booking.firstname",Matchers.equalTo("Ahmet"));
 
     }
 }

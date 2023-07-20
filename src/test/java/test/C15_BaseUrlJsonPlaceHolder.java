@@ -3,6 +3,7 @@ package test;
 import baseUrl.JsonPlaceHolderBaseURL;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
@@ -81,7 +82,7 @@ public class C15_BaseUrlJsonPlaceHolder extends JsonPlaceHolderBaseURL {
                 .then()
                 .assertThat()
                 .statusCode(200)
-                .body("title", equalTo("optio dolor molestias sit") );
+                .body("title",equalTo("optio dolor molestias sit"));
 
 
     }
